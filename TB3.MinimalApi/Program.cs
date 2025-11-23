@@ -1,5 +1,6 @@
 using TB3.Database.AppDbContextModels;
 using TB3.MinimalApi.Dtos;
+using TB3.MinimalApi.Endpoints.Product;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -151,6 +152,8 @@ app.MapDelete("/product/{id}", (int id) =>
 })
 .WithName("DeleteProduct")
 .WithOpenApi();
+
+app.UseProductAdoDotNetEndpoint();
 
 app.Run();
 
