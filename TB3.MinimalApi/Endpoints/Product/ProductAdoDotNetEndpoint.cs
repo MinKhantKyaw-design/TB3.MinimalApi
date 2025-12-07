@@ -10,7 +10,7 @@ public static class ProductAdoDotNetEndpoint
     public static void UseProductAdoDotNetEndpoint(this IEndpointRouteBuilder app)
     {
         
-        app.MapGet("/product", () =>
+        app.MapGet("/productByAdoDotNet", () =>
         {
             SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
@@ -34,7 +34,7 @@ public static class ProductAdoDotNetEndpoint
                     Price = Convert.ToDecimal(reader["Price"]),
                     DeleteFlag = Convert.ToBoolean(reader["DeleteFlag"]),
                     CreatedDateTime = Convert.ToDateTime(reader["CreatedDateTime"]),
-                    ModifiedDateTime = Convert.ToDateTime(reader["ModifiedDateTime"])
+                    ModifiedDateTime = reader["ModifiedDateTime"] == DBNull.Value ? null : Convert.ToDateTime(reader["ModifiedDateTime"])
                 };
 
                 lts.Add(item);
@@ -44,10 +44,10 @@ public static class ProductAdoDotNetEndpoint
 
             return Results.Ok(lts);
         })
-        .WithName("GetProducts")
+        .WithName("GetProductsByAdoDotNet")
         .WithOpenApi();
 
-        app.MapGet("/product/{id}", (int id) =>
+        app.MapGet("/productByAdoDotNet/{id}", (int id) =>
         {
             var item = new ProductGetResponseDto();
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -71,7 +71,7 @@ public static class ProductAdoDotNetEndpoint
                     Price = Convert.ToDecimal(reader["Price"]),
                     DeleteFlag = Convert.ToBoolean(reader["DeleteFlag"]),
                     CreatedDateTime = Convert.ToDateTime(reader["CreatedDateTime"]),
-                    ModifiedDateTime = Convert.ToDateTime(reader["ModifiedDateTime"])
+                    ModifiedDateTime = reader["ModifiedDateTime"] == DBNull.Value ? null : Convert.ToDateTime(reader["ModifiedDateTime"])
                 };
             }
 
@@ -79,10 +79,10 @@ public static class ProductAdoDotNetEndpoint
 
             return Results.Ok(item);
         })
-        .WithName("GetProduct")
+        .WithName("GetProductByAdoDotNet")
         .WithOpenApi();
 
-        app.MapPost("/product", (ProductCreateRequestDto request) =>
+        app.MapPost("/productByAdoDotNet", (ProductCreateRequestDto request) =>
         {
             SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
@@ -104,10 +104,10 @@ public static class ProductAdoDotNetEndpoint
             string message = result > 0 ? "Saving Successful." : "Saving Failed.";
             return Results.Ok(message);
         })
-        .WithName("CreateProduct")
+        .WithName("CreateProductByAdoDotNet")
         .WithOpenApi();
 
-        app.MapPut("product/{id}", (int id, ProductUpdateRequestDto request) =>
+        app.MapPut("productByAdoDotNet/{id}", (int id, ProductUpdateRequestDto request) =>
         {
             SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
@@ -130,10 +130,10 @@ public static class ProductAdoDotNetEndpoint
             string message = result > 0 ? "Updating Successful." : "Updating Failed.";
             return Results.Ok(message);
         })
-        .WithName("UpdateProduct")
+        .WithName("UpdateProductByAdoDotNet")
         .WithOpenApi();
 
-        app.MapPatch("/product/{id}", (int id, ProductPatchRequestDto request) =>
+        app.MapPatch("/productByAdoDotNet/{id}", (int id, ProductPatchRequestDto request) =>
         {
             string conditions = "";
             if (!string.IsNullOrEmpty(request.ProductName))
@@ -147,7 +147,7 @@ public static class ProductAdoDotNetEndpoint
             if (conditions.Length == 0)
                 return Results.BadRequest("Invalid Request");
 
-            conditions = conditions.Substring(0, conditions.Length - 1);
+            //conditions = conditions.Substring(0, conditions.Length - 1);
 
             SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
@@ -175,10 +175,10 @@ public static class ProductAdoDotNetEndpoint
             string message = result > 0 ? "Patching Successful." : "Patching Failed.";
             return Results.Ok(message);
         })
-        .WithName("PatchProduct")
+        .WithName("PatchProductByAdoDotNet")
         .WithOpenApi();
 
-        app.MapDelete("/product/{id}", (int id) =>
+        app.MapDelete("/productByAdoDotNet/{id}", (int id) =>
         {
             SqlConnection connection = new SqlConnection(_connectionString);
             connection.Open();
@@ -197,7 +197,7 @@ public static class ProductAdoDotNetEndpoint
             string message = result > 0 ? "Deleting Successful." : "Deleting Failed.";
             return Results.Ok(message);
         })
-        .WithName("DeleteProduct")
+        .WithName("DeleteProductByAdoDotNet")
         .WithOpenApi();
     }
 }
