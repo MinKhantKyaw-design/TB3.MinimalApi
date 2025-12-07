@@ -155,6 +155,8 @@ app.MapDelete("/product/{id}", (int id) =>
 
 app.UseProductAdoDotNetEndpoint();
 
+app.UseProductByDapperEndpoint();
+
 app.Run();
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
